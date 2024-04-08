@@ -1,11 +1,14 @@
 package org.ibs.fazlyakhmetov.tests;
 
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StatementAndPreparedTest extends BaseTest {
 
@@ -17,7 +20,10 @@ public class StatementAndPreparedTest extends BaseTest {
     @Test
     @DisplayName("Проверка стандартных/новых записей таблицы с запросами на вставку/удаление")
     public void simpleTest() throws SQLException {
-        statement = connection.createStatement();
+        statement = connection.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY
+        );
 
         String selectAll = "SELECT * FROM food";
 
@@ -45,17 +51,26 @@ public class StatementAndPreparedTest extends BaseTest {
 
         ResultSet tableAfterUpdate = statement.executeQuery(selectAll);
 
-        System.out.printf("%n%s%n", "Проверяем таблицу на добавление товара");
-        while (tableAfterUpdate.next()) {
+        System.out.printf("%n%s%n", "Проверяем таблицу на добавление товара последнего товара");
+        tableAfterUpdate.last();
             int food_id = tableAfterUpdate.getInt("food_id");
             String food_name = tableAfterUpdate.getString("food_name");
             String food_type = tableAfterUpdate.getString("food_type");
             boolean exotic = tableAfterUpdate.getBoolean("food_exotic");
 
-            System.out.printf("%d %s %s %b%n", food_id, food_name, food_type, exotic);
-        }
+            Assertions.assertEquals(5, tableAfterUpdate.getInt("food_id"));
+            Assertions.assertEquals("Вишня", tableAfterUpdate.getString("food_name"));
+            Assertions.assertEquals("FRUIT", tableAfterUpdate.getString("food_type"));
+            Assertions.assertFalse(tableAfterUpdate.getBoolean("food_exotic"));
 
-        String delete = "DELETE FROM food WHERE food_id = 10";
+            System.out.printf("%d %s %s %b%n", food_id, food_name, food_type, exotic);
+
+        statement = connection.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY
+        );
+
+        String delete = "DELETE FROM food WHERE food_id = 5";
 
         statement.executeUpdate(delete);
 
@@ -64,10 +79,10 @@ public class StatementAndPreparedTest extends BaseTest {
         ResultSet tableAfterDeleteString = statement.executeQuery(selectAll);
 
         while (tableAfterDeleteString.next()) {
-            int food_id = tableAfterDeleteString.getInt("food_id");
-            String food_name = tableAfterDeleteString.getString("food_name");
-            String food_type = tableAfterDeleteString.getString("food_type");
-            boolean exotic = tableAfterDeleteString.getBoolean("food_exotic");
+            food_id = tableAfterDeleteString.getInt("food_id");
+            food_name = tableAfterDeleteString.getString("food_name");
+            food_type = tableAfterDeleteString.getString("food_type");
+            exotic = tableAfterDeleteString.getBoolean("food_exotic");
 
             System.out.printf("%d %s %s %b%n", food_id, food_name, food_type, exotic);
         }
