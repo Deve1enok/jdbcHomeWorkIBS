@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class StatementAndPreparedTest extends BaseTest {
 
@@ -53,17 +51,17 @@ public class StatementAndPreparedTest extends BaseTest {
 
         System.out.printf("%n%s%n", "Проверяем таблицу на добавление товара последнего товара");
         tableAfterUpdate.last();
-            int food_id = tableAfterUpdate.getInt("food_id");
-            String food_name = tableAfterUpdate.getString("food_name");
-            String food_type = tableAfterUpdate.getString("food_type");
-            boolean exotic = tableAfterUpdate.getBoolean("food_exotic");
+        int food_id = tableAfterUpdate.getInt("food_id");
+        String food_name = tableAfterUpdate.getString("food_name");
+        String food_type = tableAfterUpdate.getString("food_type");
+        boolean exotic = tableAfterUpdate.getBoolean("food_exotic");
 
-            Assertions.assertEquals(5, tableAfterUpdate.getInt("food_id"));
-            Assertions.assertEquals("Вишня", tableAfterUpdate.getString("food_name"));
-            Assertions.assertEquals("FRUIT", tableAfterUpdate.getString("food_type"));
-            Assertions.assertFalse(tableAfterUpdate.getBoolean("food_exotic"));
+        Assertions.assertEquals(5, tableAfterUpdate.getInt("food_id"));
+        Assertions.assertEquals("Вишня", tableAfterUpdate.getString("food_name"));
+        Assertions.assertEquals("FRUIT", tableAfterUpdate.getString("food_type"));
+        Assertions.assertFalse(tableAfterUpdate.getBoolean("food_exotic"));
 
-            System.out.printf("%d %s %s %b%n", food_id, food_name, food_type, exotic);
+        System.out.printf("%d %s %s %b%n", food_id, food_name, food_type, exotic);
 
         statement = connection.createStatement(
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
