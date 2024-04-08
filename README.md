@@ -1,4 +1,4 @@
-###Автоматизированные тест-кейсы на основе JDBC
+## Автоматизированные тест-кейсы на основе JDBC
 
 Предусловие запуска тестов:			
 1) Создать папку "Working Project" на диске С и скопировать в папку файл qualit-sandbox.jar: https://drive.google.com/file/d/18bI8rR9uPjVUNbSPIXBs84qViW0_VFpg/view			
